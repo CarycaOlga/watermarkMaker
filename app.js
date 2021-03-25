@@ -53,7 +53,9 @@ const makeImageBrighter = async function(inputFile, outputFile) {
 
 const imageContrastMode = async function(inputFile, outputFile) {
   try {
-
+    const image = await Jimp.read(inputFile);
+    image.contrast(.5)
+    await image.quality(100).writeAsync(outputFile);
   }
   catch(error) {
     console.log('Something went wrong... Try again!');
@@ -62,7 +64,9 @@ const imageContrastMode = async function(inputFile, outputFile) {
 
 const makeImageFaded = async function(inputFile, outputFile) {
   try {
-
+    const image = await Jimp.read(inputFile);
+    image.color([{apply:'greyscale', params: [100]}])
+    await image.quality(100).writeAsync(outputFile);
   }
   catch(error) {
     console.log('Something went wrong... Try again!');
@@ -71,7 +75,9 @@ const makeImageFaded = async function(inputFile, outputFile) {
 
 const invertImage = async function(inputFile, outputFile) {
   try {
-
+    const image = await Jimp.read(inputFile);
+    image.invert()
+    await image.quality(100).writeAsync(outputFile);
   }
   catch(error) {
     console.log('Something went wrong... Try again!');
@@ -102,20 +108,42 @@ const startApp = async () => {
     type: 'input',
     message: 'What file do you want to mark?',
     default: 'test.jpg',
-  }, {
-    name: 'watermarkType',
+  },{
+    name: 'anotherActions',
     type: 'list',
-    choices: ['Text watermark', 'Image watermark'],
+    message: 'Do you want only waterMark or something more?',
+    choices: ['Only waterMark', 'Something more'],
   }]);
-  if(options.watermarkType === 'Text watermark') {
+  if(options.anotherActions === 'Only waterMark') { 
+    const marked = await inquirer.prompt([{
+      name: 'watermarkType',
+      type: 'list',
+      choices: ['Text watermark', 'Image watermark'],
+  }]);
+  if(options.anotherActions === 'Something more') {
+    const actions = await inquirer.prompt([{
+      name: 'actionType',
+      type: 'list',
+      choices: ['Brighten image', 'Increase contrast', 'Make image black & white', 'Invert image'],
+  }]);
+  if(actions.actionType === 'Brighten image') {
+
+  } else if(actions.actionType === 'Increase contrast') {
+
+  } else if(actions.actionType === 'Make image black & white') {
+
+  } else {
+
+  }
+  if(marked.watermarkType === 'Text watermark') {
     const text = await inquirer.prompt([{
       name: 'value',
       type: 'input',
       message: 'Type your watermark text:',
     }]);
-    options.watermarkText = text.value;
+    marked.watermarkText = text.value;
     if (fs.existsSync(`./img/${options.inputImage}`)) {
-      addTextWatermarkToImage('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage), options.watermarkText);
+      addTextWatermarkToImage('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage), marked.watermarkText);
       console.log("Fantastic!");
       startApp();
     } else {
@@ -130,7 +158,7 @@ const startApp = async () => {
       default: 'logo.png',
     }])
     options.watermarkImage = image.filename;
-    if (fs.existsSync(`./img/${options.inputImage}`) && fs.existsSync(`./img/${options.watermarkImage}`)) {
+    if (fs.existsSync(`./img/${options.inputImage}`) && fs.existsSync(`./img/${marked.watermarkImage}`)) {
       addImageWatermarkToImage('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage), options.watermarkImage);
       console.log("Fantastic!");
       startApp();
