@@ -196,7 +196,7 @@ const startApp = async () => {
       message: 'What next?',
       choices: ['Text watermark', 'Image watermark'],
     }])
-    const modifiedImage= actions.actionType('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage));
+    **const modifiedImage= actions.actionType('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage));**
     if(next.nextAction === 'Text watermark') {
       const text = await inquirer.prompt([{
         name: 'value',
