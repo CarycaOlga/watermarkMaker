@@ -151,7 +151,7 @@ const startApp = async () => {
       }
     }
   }
-  if(options.anotherActions === 'Something more') {
+  else if(options.anotherActions === 'Something more') {
     const actions = await inquirer.prompt([{
       name: 'actionType',
       type: 'list',
@@ -184,6 +184,43 @@ const startApp = async () => {
     } else {
       if (fs.existsSync(`./img/${options.inputImage}`)) {
         invertImage('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage));
+        console.log("Fantastic!");
+        startApp();
+      } else {
+        console.log('Something went wrong... Try again');
+      }
+    }
+    const next = await inquirer.prompt([{
+      name: 'nextAction',
+      type: 'list',
+      message: 'What next?',
+      choices: ['Text watermark', 'Image watermark'],
+    }])
+    const modifiedImage= actions.actionType('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage));
+    if(next.nextAction === 'Text watermark') {
+      const text = await inquirer.prompt([{
+        name: 'value',
+        type: 'input',
+        message: 'Type your watermark text:',
+      }]);
+      next.watermarkText = text.value;
+      if (fs.existsSync(`./img/${options.inputImage}`)) {
+        addTextWatermarkToImage('./img/' + modifiedImage, './img/' + prepareOutputFilename(modifiedImage), next.watermarkText);
+        console.log("Fantastic!");
+        startApp();
+      } else {
+        console.log('Something went wrong... Try again');
+      }
+    } else {
+      const image = await inquirer.prompt([{
+        name: 'filename',
+        type: 'input',
+        message: 'Type your watermark name:',
+        default: 'logo.png',
+      }])
+      next.watermarkImage = image.filename;
+      if (fs.existsSync(`./img/${options.inputImage}`) && fs.existsSync(`./img/${next.watermarkImage}`)) {
+        addImageWatermarkToImage('./img/' + modifiedImage, './img/' + prepareOutputFilename(modifiedImage), next.watermarkImage);
         console.log("Fantastic!");
         startApp();
       } else {
