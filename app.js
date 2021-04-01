@@ -114,44 +114,7 @@ const startApp = async () => {
     message: 'Do you want only waterMark or something more?',
     choices: ['Only waterMark', 'Something more'],
   }]);
-  if(options.anotherActions === 'Only waterMark') { 
-    const marked = await inquirer.prompt([{
-      name: 'watermarkType',
-      type: 'list',
-      choices: ['Text watermark', 'Image watermark'],
-    }]);
-    if(marked.watermarkType === 'Text watermark') {
-      const text = await inquirer.prompt([{
-        name: 'value',
-        type: 'input',
-        message: 'Type your watermark text:',
-      }]);
-      marked.watermarkText = text.value;
-      if (fs.existsSync(`./img/${options.inputImage}`)) {
-        addTextWatermarkToImage('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage), marked.watermarkText);
-        console.log("Fantastic!");
-        startApp();
-      } else {
-        console.log('Something went wrong... Try again');
-      }
-    } else {
-      const image = await inquirer.prompt([{
-        name: 'filename',
-        type: 'input',
-        message: 'Type your watermark name:',
-        default: 'logo.png',
-      }])
-      marked.watermarkImage = image.filename;
-      if (fs.existsSync(`./img/${options.inputImage}`) && fs.existsSync(`./img/${marked.watermarkImage}`)) {
-        addImageWatermarkToImage('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage), marked.watermarkImage);
-        console.log("Fantastic!");
-        startApp();
-      } else {
-        console.log('Something went wrong... Try again');
-      }
-    }
-  }
-  else if(options.anotherActions === 'Something more') {
+  if(options.anotherActions === 'Something more') {
     const actions = await inquirer.prompt([{
       name: 'actionType',
       type: 'list',
@@ -190,22 +153,20 @@ const startApp = async () => {
         console.log('Something went wrong... Try again');
       }
     }
-    const next = await inquirer.prompt([{
-      name: 'nextAction',
+    const marked = await inquirer.prompt([{
+      name: 'watermarkType',
       type: 'list',
-      message: 'What next?',
       choices: ['Text watermark', 'Image watermark'],
-    }])
-    const modifiedImage= actions.actionType('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage));
-    if(next.nextAction === 'Text watermark') {
+    }]);
+    if(marked.watermarkType === 'Text watermark') {
       const text = await inquirer.prompt([{
         name: 'value',
         type: 'input',
         message: 'Type your watermark text:',
       }]);
-      next.watermarkText = text.value;
+      marked.watermarkText = text.value;
       if (fs.existsSync(`./img/${options.inputImage}`)) {
-        addTextWatermarkToImage('./img/' + modifiedImage, './img/' + prepareOutputFilename(modifiedImage), next.watermarkText);
+        addTextWatermarkToImage('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage), marked.watermarkText);
         console.log("Fantastic!");
         startApp();
       } else {
@@ -218,9 +179,9 @@ const startApp = async () => {
         message: 'Type your watermark name:',
         default: 'logo.png',
       }])
-      next.watermarkImage = image.filename;
-      if (fs.existsSync(`./img/${options.inputImage}`) && fs.existsSync(`./img/${next.watermarkImage}`)) {
-        addImageWatermarkToImage('./img/' + modifiedImage, './img/' + prepareOutputFilename(modifiedImage), next.watermarkImage);
+      marked.watermarkImage = image.filename;
+      if (fs.existsSync(`./img/${options.inputImage}`) && fs.existsSync(`./img/${marked.watermarkImage}`)) {
+        addImageWatermarkToImage('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage), marked.watermarkImage);
         console.log("Fantastic!");
         startApp();
       } else {
