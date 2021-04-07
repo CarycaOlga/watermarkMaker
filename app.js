@@ -124,7 +124,6 @@ const startApp = async () => {
       if (fs.existsSync(`./img/${options.inputImage}`)) {
         makeImageBrighter('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage));
         console.log("Fantastic!");
-        startApp();
       } else {
         console.log('Something went wrong... Try again');
       }
@@ -132,7 +131,6 @@ const startApp = async () => {
       if (fs.existsSync(`./img/${options.inputImage}`)) {
         imageContrastMode('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage));
         console.log("Fantastic!");
-        startApp();
       } else {
         console.log('Something went wrong... Try again');
       }
@@ -140,7 +138,6 @@ const startApp = async () => {
       if (fs.existsSync(`./img/${options.inputImage}`)) {
         makeImageFaded('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage));
         console.log("Fantastic!");
-        startApp();
       } else {
         console.log('Something went wrong... Try again');
       }
@@ -148,7 +145,6 @@ const startApp = async () => {
       if (fs.existsSync(`./img/${options.inputImage}`)) {
         invertImage('./img/' + options.inputImage, './img/' + prepareOutputFilename(options.inputImage));
         console.log("Fantastic!");
-        startApp();
       } else {
         console.log('Something went wrong... Try again');
       }
@@ -189,8 +185,6 @@ const startApp = async () => {
       }
     }
   }
-  
-  
 }
 
 startApp();
